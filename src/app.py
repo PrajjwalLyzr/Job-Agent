@@ -61,6 +61,9 @@ if st.button("Search Jobs"):
 
                     st.markdown("---")
 
+            else:
+                st.write('Search Again...')
+
     else:
         st.warning('Please provide the resume')
         remove_existing_files(directory=ResumeData)
