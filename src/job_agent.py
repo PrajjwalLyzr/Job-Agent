@@ -86,22 +86,3 @@ class JobSearchAgent:
                     """
                         )
         return response['response']
-    
-
-    def job_role_finder(self, resumeSummary):
-        agent_prompt = "You are an AI agent that can extract key details from a resume, including job role, experience, skills, and qualifications. You should identify and summarize these details accurately from the resume data provided."
-
-        job_role_agent = self.Agent.create_agent(
-            env_id=self.environment['env_id'],
-            system_prompt=agent_prompt,
-            name='Job Role Agent'
-        )
-
-        response = self.Agent.send_message(
-                agent_id=job_role_agent['agent_id'],
-                user_id="default_user",
-                session_id="resume optimization session",
-                message=f"""Extract the job role and experience from the following resume summary, and write those in a single liner statement, such as job query:\n\n{resumeSummary}""")
-        
-
-        return response['response']

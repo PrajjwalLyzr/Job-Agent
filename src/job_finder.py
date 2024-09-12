@@ -4,8 +4,6 @@ import pypdf
 import json
 from serpapi import GoogleSearch
 from job_agent import JobSearchAgent
-from lyzragentapi import data_summarizer
-
 
 def JobFinder(OPENAI_API_KEY, LYZR_KEY, SERP_KEY):
     job_search_agent = JobSearchAgent(APIKey=OPENAI_API_KEY, LyzrKey=LYZR_KEY)
@@ -34,7 +32,7 @@ def JobFinder(OPENAI_API_KEY, LYZR_KEY, SERP_KEY):
         
         search = GoogleSearch(params)
         serp_results = search.get_dict()
-        
+
         if serp_results:
             job_output_json = job_search_agent.job_match_agent(searchJobData=serp_results,
                                                             resumeData=resume_pdf_content)
