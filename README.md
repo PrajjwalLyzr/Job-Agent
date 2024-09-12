@@ -69,7 +69,8 @@ Before running the application, make sure you have the following:
 
 ## Project Structure
 
-project_root/
+```
+Job-Agent/
 │
 ├── src/
 │   │   ├── logo/                      # Folder for image assets like logos
@@ -93,3 +94,4 @@ project_root/
 ├── .env                            # Environment file for API keys (not tracked in version control)
 ├── requirements.txt                # List of Python dependencies
 └── README.md                       # Project description and setup instructions
+```
