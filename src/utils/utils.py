@@ -149,6 +149,10 @@ def page_config(layout = "centered"):
         page_icon="./logo/lyzr-logo-cut.png"
     )
 
+def about_app():
+    with st.expander("ℹ️ - Why this Job Agent"):
+        st.caption("""The Job Agent App leverages advanced Lyzr's Agent API to simplify the job search process. By analyzing your resume and matching it with relevant job listings, the app saves time and enhances the precision of job searches. The app ensures that users can easily find and apply for the right jobs, making the job-hunting journey more focused and less overwhelming.
+        """)
 
 
 def template_end():

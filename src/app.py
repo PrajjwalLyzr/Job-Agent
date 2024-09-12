@@ -6,7 +6,8 @@ from utils import (social_media,
                    style_app,
                    save_uploaded_file,
                    remove_existing_files,
-                   css_for_card_layout)
+                   css_for_card_layout,
+                   about_app)
 from dotenv import load_dotenv
 from job_finder import JobFinder
 
@@ -30,6 +31,7 @@ os.makedirs(ResumeData, exist_ok=True)
 
 st.header("Job Agent")
 st.markdown("##### Powered by [Lyzr](https://www.lyzr.ai/)")
+about_app()
 st.markdown('---')
 
 resume_file = st.file_uploader(label="Upload your resume pdf file", type=["pdf"])
