@@ -1,14 +1,14 @@
 # Job Agent Powered by [Lyzr.ai](https://www.lyzr.ai/)
 
 
-**Job Agent** is a Streamlit-based web application that allows users to upload their resume and search for jobs tailored to their skills. The app is powered by the [Lyzr](https://www.lyzr.ai/) platform, OpenAI, and Serp API to provide AI-driven job search capabilities.
+**Job Agent** is a Streamlit-based web application that allows users to upload their resume and search for jobs tailored to their skills. The app is powered by the [Lyzr Agent API](https://agent.api.lyzr.app/docs#overview) platform, and Serp API to provide AI-driven job search capabilities.
 
 ## Features
 
 - Upload your resume (PDF format).
 - Search for jobs based on your resume using AI.
-- Display job results in a visually appealing card layout.
-- Direct links to apply for the listed jobs.
+- Got the Task status on display
+- Get a mail with the matched jobs
 - Powered by Lyzr, OpenAI, and Serp API.
 
 ## Prerequisites
@@ -77,17 +77,13 @@ Job-Agent/
 │   │   ├── lyzr-logo-cut.png       # Lyzr logo asset (cropped)
 │   │   └── lyzr-logo.png           # Lyzr logo asset (standard)
 │   │
-│   ├── lyzragentapi/               # Contains modules related to Lyzr agent API
-│   │   │   ├── __init__.py             # Initialize the lyzragentapi package
-│   │   └── lyzr_agents.py          # Module for Lyzr agents functionality
 │   │
 │   ├── utils/                      # Utility functions and helper scripts
 │   │   │   ├── __init__.py             # Initialize the utils package
 │   │   └── utils.py                # Utility functions for the application
 │   │
 │   ├── __init__.py                 # Initialize the src package
-│   └── job_agent.py                # Main logic for job agent functionality
-│   └── job_finder.py               # Logic for job searching and API interaction
+│   │   └── job_finder.py               # Logic for job searching and API interaction
 │
 ├── app.py                          # Main Streamlit app entry point
 │

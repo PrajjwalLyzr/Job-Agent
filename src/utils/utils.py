@@ -1,9 +1,98 @@
 import streamlit as st
 from st_social_media_links import SocialMediaIcons
+import json
 import os
 import shutil
 from PIL import Image
+from openai import OpenAI
+from dotenv import load_dotenv
 
+load_dotenv()
+
+# Utility function to check if two configurations are identical
+def compare_configs(stored_config, new_config):
+    return stored_config == new_config
+
+# Convert EnvironmentConfig to a dictionary
+def env_config_to_dict(env_config):
+    return {
+        'name': env_config.name,
+        'features': [feature.__dict__ for feature in env_config.features],
+        'tools': env_config.tools,
+        'llm_config': env_config.llm_config
+    }
+
+# Convert AgentConfig to a dictionary
+def agent_config_to_dict(agent_config):
+    return {
+        'env_id': agent_config.env_id,
+        'system_prompt': agent_config.system_prompt,
+        'name': agent_config.name,
+        'agent_description': agent_config.agent_description
+    }
+
+# Save environment and agent configurations with IDs to the JSON file
+def save_ids(env_id, env_config, agent_id, agent_config):
+    data = load_ids() or {}
+
+    # Save the environment and agent config alongside their IDs
+    data[env_id] = {
+        'env_config': env_config_to_dict(env_config),
+        'agent_id': agent_id,
+        'agent_config': agent_config_to_dict(agent_config)
+    }
+
+    with open(os.getenv('ID_FILE'), 'w') as f:
+        json.dump(data, f, indent=4)
+
+# Load the stored configurations and IDs from the JSON file
+def load_ids():
+    if os.path.exists(os.getenv('ID_FILE')):
+        with open(os.getenv('ID_FILE'), 'r') as f:
+            return json.load(f)
+    return None
+
+
+def reference_email_draft():
+    draftmail = """
+
+                    Hello {{Name of Reciever}},
+                    {{
+                    Body
+
+                    Firet greet and inform the reciever about the job position/role
+
+                    Then provide the jobs with their Title along with short description and apply links.
+                    }}
+
+                    Sincerely,
+                    Your Job Matching Team
+                """
+    
+    return draftmail
+
+def extract_prefered_job_role(resumeData,OpenAI_API_KEY ):
+    client = OpenAI(api_key=OpenAI_API_KEY)
+    prompt = f"""
+    You are an expert in job matching. Based on the following resume data, identify the most suitable job role for the candidate.
+    Resume Data: {resumeData}
+
+    Please output only a one liner query which is having the job role and experience. Ouput formate: '[[job role]] having [[experience]] of experience'.
+    """
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",  # Using GPT-4 model for better accuracy
+            messages=[{"role": "system", "content": prompt},
+                      {"role": "user", "content": resumeData}],
+        )
+        # Extract job role from the response
+        job_role = response.choices[0].message.content
+
+        return job_role
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
 
 
 def remove_existing_files(directory):
@@ -143,7 +232,7 @@ def style_app():
 
 def page_config(layout = "centered"):
     st.set_page_config(
-        page_title="Virtual Career Mentor",
+        page_title="Job Agent",
         layout=layout,  # or "wide" 
         initial_sidebar_state="auto",
         page_icon="./logo/lyzr-logo-cut.png"
@@ -201,3 +290,6 @@ def template_end():
         """,
         unsafe_allow_html=True
     )
+
+
+

@@ -3,11 +3,15 @@ import os
 import pypdf
 import json
 from serpapi import GoogleSearch
-from job_agent import JobSearchAgent
+from utils import extract_prefered_job_role
+from dotenv import load_dotenv
 
-def JobFinder(OPENAI_API_KEY, LYZR_KEY, SERP_KEY):
-    job_search_agent = JobSearchAgent(APIKey=OPENAI_API_KEY, LyzrKey=LYZR_KEY)
+load_dotenv()
 
+openai_api_key = os.getenv('OPENAI_API_KEY')
+serp_api_key = os.getenv('SERP_KEY')
+
+def JobFinder(SERP_KEY, OPENAI_API_KEY):
     resume_pdf_content = ""
     file_name = get_file_name(directory="ResumeData")
     file_path = os.path.join("ResumeData", file_name)
@@ -17,14 +21,13 @@ def JobFinder(OPENAI_API_KEY, LYZR_KEY, SERP_KEY):
         for page in range(len(pdf_reader.pages)):
             resume_pdf_content += pdf_reader.pages[page].extract_text()
     
-    job_role_query = job_search_agent.job_role_finder_agent(resumeData=resume_pdf_content)
+    
+    job_role = extract_prefered_job_role(resumeData=resume_pdf_content, OpenAI_API_KEY=OPENAI_API_KEY)
 
-    # return job_role_query
-
-    if job_role_query:
+    if job_role:
         params = {
             "engine": "google_jobs",
-            "q": job_role_query,
+            "q": job_role,
             "hl": "en",
             "ltype": "1",
             "api_key": SERP_KEY
@@ -33,23 +36,5 @@ def JobFinder(OPENAI_API_KEY, LYZR_KEY, SERP_KEY):
         search = GoogleSearch(params)
         serp_results = search.get_dict()
 
-        if serp_results:
-            job_output_json = job_search_agent.job_match_agent(searchJobData=serp_results,
-                                                            resumeData=resume_pdf_content)
-                
-
-            if job_output_json:
-                job_output_json_obj = json.loads(str(job_output_json))
-
-                return job_output_json_obj
-
-            else:
-                raise "Type conversion error for: JSON"
-            
-        else:
-            raise "Agent not able to match the jobs"
-
-    else:
-        raise "Job Role are not found"
-
-    
+        
+        return serp_results, resume_pdf_content
